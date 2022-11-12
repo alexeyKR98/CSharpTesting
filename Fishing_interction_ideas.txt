@@ -1,0 +1,10 @@
+-5 fishes
+
+-probability to get one of them (different probabilities)
+
+	50 % success
+		50% to get a sardine
+		25% to get a Carp
+		12% to get a Northern pike
+		8% to get a Salmon
+		5% to get a Swordfish
