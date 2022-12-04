@@ -36,7 +36,7 @@ class FishingWithTimer{
 			//Taking out the fishing rod with loot
 			if(getLoot < 3){
 				ticks = 0;
-				Console.Write("Something has bittne, press enter to take out the fishing rod: ");
+				Console.Write("Something has bitten, press enter to take out the fishing rod: ");
 				Timer takingOutTimer = new Timer(2000);
 				TakeOutTheFishingRod(takingOutTimer);
 				while(Console.ReadKey(true).Key	!= ConsoleKey.Enter);
