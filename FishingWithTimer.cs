@@ -42,7 +42,7 @@ class FishingWithTimer{
 				while(Console.ReadKey(true).Key	!= ConsoleKey.Enter);
 				takingOutTimer.Stop();
 				if(ticks < 2)
-					Loot(bucket, fishCounter, fishes);
+					Loot(bucket, ref fishCounter, fishes);
 				else{
 					Console.WriteLine("You got nothing...");
 					Console.WriteLine("");
@@ -82,8 +82,7 @@ class FishingWithTimer{
 		ticks++;
 	}
 	
-	static void Loot(string[] bucket, byte fishCounter, string[] fishes){
-		fishCounter++;
+	static void Loot(string[] bucket, ref byte fishCounter, string[] fishes){
 		int fish = random.Next(1, 101);
 		
 		if(fish <= 50){
@@ -106,6 +105,7 @@ class FishingWithTimer{
 			Console.WriteLine("Congrats, you got a " + fishes[4] + "!!!");
 			bucket[fishCounter] = fishes[4];
 		}
+		fishCounter++;
 	}
 }
 
