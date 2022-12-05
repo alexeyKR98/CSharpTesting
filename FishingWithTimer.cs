@@ -4,54 +4,41 @@ using System.Timers;
 class FishingWithTimer{
 	
 	static int ticks = 0;
+	static int ticks2 = 0;
 	static int getLoot = 10;
+	static bool getFish = false, noRepeat = true;
 	static Random random = new Random();
+	static Timer fishingTimer = new Timer(4000);
 	
 	static void Main(){
+		Fishing(fishingTimer);
 		string[] fishes = {"Sardine", "Carp", "Northern pike", "Salmon", "Swordfish"};	
 		string[] bucket = new string[10];
-		Timer getFish = new Timer (2000);
 		byte fishCounter = 0;
+		ConsoleKeyInfo button;
 		while(fishCounter < 10){
-			Timer fishingTimer = new Timer(4000);
 			ticks = 0;
+			ticks2 = 0;
 			getLoot = 10;
-			
+			getFish = false;
+			noRepeat = true;
 			//Throwing the fishing rod
 			do{
 			Console.WriteLine("");
-			Console.WriteLine("Press enter to throw the fishing rod: ");
+			Console.WriteLine("Press Up Arrow to throw the fishing rod: ");
+			button = Console.ReadKey(true);
 			}
-			while(Console.ReadKey(true).Key	!= ConsoleKey.Enter);
+			while(button.Key != ConsoleKey.UpArrow);
+			fishingTimer.Start();
 			
 			//Wating step
 			Console.WriteLine("");
 			Console.Write("Waiting ");
-			Fishing(fishingTimer);
-			while(ticks < 4 && getLoot >= 3){}
+			while(ticks < 3 && getLoot != 20){Console.ReadKey(true);}
 			fishingTimer.Stop();
 			Console.WriteLine("");
-			Console.WriteLine("");
-			
-			//Taking out the fishing rod with loot
-			if(getLoot < 3){
-				ticks = 0;
-				Console.Write("Something has bitten, press enter to take out the fishing rod: ");
-				Timer takingOutTimer = new Timer(2000);
-				TakeOutTheFishingRod(takingOutTimer);
-				while(Console.ReadKey(true).Key	!= ConsoleKey.Enter);
-				takingOutTimer.Stop();
-				if(ticks < 2)
-					Loot(bucket, ref fishCounter, fishes);
-				else{
-					Console.WriteLine("You got nothing...");
-					Console.WriteLine("");
-				}
-			}
-			else{
-				Console.WriteLine("You got nothing...");
-				Console.WriteLine("");
-			}	
+			if(getFish)
+				Loot(bucket, ref fishCounter, fishes);
 		}
 		for(int i = 0; i < fishCounter; i++){
 			Console.WriteLine("");
@@ -61,24 +48,34 @@ class FishingWithTimer{
 	static void Fishing(Timer fishingTimer){
 		fishingTimer.Elapsed += Waiting;
 		fishingTimer.AutoReset = true;
-		fishingTimer.Enabled = true;
 	}
 	
 	static void Waiting(Object source, ElapsedEventArgs e){
-		
-		ticks++;
-		if(ticks < 4)
+		if(ticks2 == 1)
+			ticks2++;
+		if(getLoot != 20 && ticks < 3){
+			if(getLoot >= 3 && ticks < 3)
+				getLoot = random.Next(1, 11);
+			if(getLoot < 3){
+				getFish = true;
+				Console.WriteLine("Something has bitten, press any key to take out the fishing rod");
+				getLoot = 20;
+				ticks2++;
+			}
+		}
+		if(((getLoot == 20) && (ticks2 != 1)) && (noRepeat == true)){
+			Console.WriteLine("The fish has gone..., press any key to start again.");
+			getFish = false;
+			noRepeat = false;
+			ticks = 0;
+		}
+			
+		if(ticks == 3 && (getLoot >= 3 && getLoot != 20)){
+			Console.WriteLine("You got nothing..., press any key to try again");
+			ticks2 = 0;
+		}
+		if(ticks < 3 && getLoot >= 3 && getLoot != 20)
 			Console.Write(". ");
-		getLoot = random.Next(1, 11);
-	}
-	
-	static void TakeOutTheFishingRod(Timer takingOutTimer){
-		takingOutTimer.Elapsed += Action;
-		takingOutTimer.AutoReset = true;
-		takingOutTimer.Enabled = true;
-	}
-	
-	static void Action(Object source, ElapsedEventArgs e){
 		ticks++;
 	}
 	
