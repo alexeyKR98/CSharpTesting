@@ -11,15 +11,15 @@ class FishingWithTimer{
 	static Timer fishingTimer = new Timer(4000);
 	
 	static void Main(){
-		Fishing(fishingTimer);
+		Fishing();
 		string[] fishes = {"Sardine", "Carp", "Northern pike", "Salmon", "Swordfish"};	
 		string[] bucket = new string[10];
 		byte fishCounter = 0;
 		ConsoleKeyInfo button;
 		while(fishCounter < 10){
-			ticks = 0;
-			ticks2 = 0;
-			getLoot = 10;
+			ticks = 0;	//ticks for waiting method
+			ticks2 = 0;	//ticks for control the time to get out the fishing rod
+			getLoot = 10; //need it to enter the first if statment in the timer event and modify the odds of getting the fish
 			getFish = false;
 			noRepeat = true;
 			//Throwing the fishing rod
@@ -37,15 +37,18 @@ class FishingWithTimer{
 			while(ticks < 3 && getLoot != 20){Console.ReadKey(true);}
 			fishingTimer.Stop();
 			Console.WriteLine("");
-			if(getFish)
+			if(getFish){
 				Loot(bucket, ref fishCounter, fishes);
+				Console.WriteLine("");
+			}
 		}
 		for(int i = 0; i < fishCounter; i++){
 			Console.WriteLine("");
 			Console.WriteLine((i + 1) + ") " + bucket[i]);
 		}
+		Console.ReadKey(true);
 	}
-	static void Fishing(Timer fishingTimer){
+	static void Fishing(){
 		fishingTimer.Elapsed += Waiting;
 		fishingTimer.AutoReset = true;
 	}
@@ -56,25 +59,26 @@ class FishingWithTimer{
 		if(getLoot != 20 && ticks < 3){
 			if(getLoot >= 3 && ticks < 3)
 				getLoot = random.Next(1, 11);
-			if(getLoot < 3){
+			if(getLoot < 2){
 				getFish = true;
 				Console.WriteLine("Something has bitten, press any key to take out the fishing rod");
 				getLoot = 20;
-				ticks2++;
+				ticks2++; // need it to enter the next if statement and lose the fish looted
 			}
 		}
 		if(((getLoot == 20) && (ticks2 != 1)) && (noRepeat == true)){
+			Console.WriteLine("");
 			Console.WriteLine("The fish has gone..., press any key to start again.");
 			getFish = false;
-			noRepeat = false;
+			noRepeat = false; //don't want to repeat the WriteLine() if the player doesn't press any key
 			ticks = 0;
 		}
 			
-		if(ticks == 3 && (getLoot >= 3 && getLoot != 20)){
+		if(ticks == 3 && (getLoot >= 2 && getLoot != 20)){
 			Console.WriteLine("You got nothing..., press any key to try again");
 			ticks2 = 0;
 		}
-		if(ticks < 3 && getLoot >= 3 && getLoot != 20)
+		if(ticks < 3 && getLoot >= 2 && getLoot != 20)
 			Console.Write(". ");
 		ticks++;
 	}
